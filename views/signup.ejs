@@ -11,61 +11,69 @@
 <body>
     <%- include('partials/header', { page: 'signup' }) %>
 
-    <form>
-        <h2>SignUp page</h2>
-        <label for="email">Email</label>
-        <input type="text " name="email" required>
-        <div class="email error"></div>
+        <form>
+            <h2>SignUp page</h2>
+            <label for="email">Email</label>
+            <input type="text " name="email" required>
+            <div class="email error"></div>
 
-        <label for="password">Password</label>
-        <input type="password" name="password" required>
-        <div class="password error"></div>
+            <label for="password">Password</label>
+            <input type="password" name="password" required>
+            <div class="password error"></div>
 
-        <button>SignUp</button>
-    </form>
+            <label for="role">Select Role:</label>
+            <select id="role" name="role" required>
+                <option value="">-- Select Role --</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+            </select>
 
-    <script>
-        const form = document.querySelector('form');
-        const emailError = document.querySelector('.email.error');
-        const passwordError = document.querySelector('.password.error');
+            <button>SignUp</button>
+        </form>
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        <script>
+            const form = document.querySelector('form');
+            const emailError = document.querySelector('.email.error');
+            const passwordError = document.querySelector('.password.error');
 
-            emailError.textContent = '';
-            passwordError.textContent = '';
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            const email = form.email.value;
-            const password = form.password.value;
+                emailError.textContent = '';
+                passwordError.textContent = '';
 
-            try {
-                const res = await fetch('/signUp', {
-                    method: 'POST',
-                    body: JSON.stringify({ email, password }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
+                const email = form.email.value;
+                const password = form.password.value;
+                const role = form.role.value;
 
-                const data = await res.json();
-                console.log("Parsed JSON Response:", data); // Debugging
+                try {
+                    const res = await fetch('/signUp', {
+                        method: 'POST',
+                        body: JSON.stringify({ email, password, role }),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
 
-                if (data.errors) {
-                    if (data.errors.email) {
-                        emailError.textContent = data.errors.email;
+                    const data = await res.json();
+                    console.log("Parsed JSON Response:", data); // Debugging
+
+                    if (data.errors) {
+                        if (data.errors.email) {
+                            emailError.textContent = data.errors.email;
+                        }
+                        if (data.errors.password) {
+                            passwordError.textContent = data.errors.password;
+                        }
                     }
-                    if (data.errors.password) {
-                        passwordError.textContent = data.errors.password;
+
+                    if (data.user) {
+                        location.assign('/'); // Redirect on successful signup
                     }
+                } catch (err) {
+                    console.log("Fetch Error:", err);
                 }
+            });
 
-                if (data.user) {
-                    location.assign('/'); // Redirect on successful signup
-                }
-            } catch (err) {
-                console.log("Fetch Error:", err);
-            }
-        });
-
-    </script>
+        </script>
 
 </body>
 

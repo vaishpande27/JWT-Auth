@@ -36,23 +36,25 @@ const handleErrors = (err) => {
 
 const maxAge=3*24*60*60 //expects time in seconds
 //this function returns token with signature
-const createToken=(id)=>{
-    return jwt.sign({id},'Secret_message',{
+const createToken=(id,role)=>{
+    const token= jwt.sign({id, role},'Secret_message',{
         expiresIn:maxAge
     });
+    // console.log("Generated Token:",token) //Debugging
+    return token;
 }
 
 module.exports.signup_get=(req,res)=>{
     res.render('signUp')    // This will render signUp.ejs
 }
 module.exports.signup_post=async(req,res)=>{
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     // res.json({ message: "User signed up successfully", email, password });
     //we have to create a user using the post data
     try{
-        const user=await User.create({email,password})
+        const user=await User.create({email,password,role})
         //right after we created a user we have to create a jwt
-        const token=createToken(user._id);
+        const token=createToken(user._id,user.role);
         res.cookie('jwt',token,{httpOnly:true,maxAge:maxAge*1000})
         res.status(201).json({user})
     }
@@ -75,7 +77,7 @@ module.exports.login_post=async(req,res)=>{
         const user = await User.login(email, password);
         //if this is success we need to then create json web token to put in cookie and send to 
         // browser to say hey yes they are logged in and as long as they have this jwt they are logged in
-        const token=createToken(user._id);
+        const token=createToken(user._id,user.role);
         res.cookie('jwt',token,{httpOnly:true,maxAge:maxAge*1000});
         res.status(200).json({ user });
     } catch (err) {
@@ -86,5 +88,6 @@ module.exports.login_post=async(req,res)=>{
 // Create a logout route that clears the JWT cookie.
 module.exports.logout_get = (req, res) => {
     res.cookie('jwt', '', { maxAge: 1 }); // Clear the cookie by setting an empty value and a very short expiry time
+    res.redirect('/login')
     res.status(200).json({ message: 'User logged out successfully' });
 };
