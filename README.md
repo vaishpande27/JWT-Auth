@@ -1,32 +1,58 @@
-# 🔐 JWT Authentication in Node.js with Express & MongoDB
+# 🧑‍💼 Job Portal Web Application
 
-This project implements **user authentication** using **JWT (JSON Web Tokens)**, **bcrypt for password hashing**, and **cookies for session management**. The system includes **signup, login, and logout** functionality, along with error handling and validation.
-
----
-
-## 🚀 Technologies Used
-
-- **Node.js & Express.js** – Backend framework
-- **MongoDB & Mongoose** – Database & ODM
-- **bcrypt.js** – Password hashing
-- **jsonwebtoken (JWT)** – Token-based authentication
-- **cookie-parser** – Managing HTTP cookies
-- **Express Middleware** – Handling routes & authentication
+A full-stack Job Portal where recruiters can post jobs, users can apply with resumes, and admins/recruiters can view and manage applicants. Built using **Node.js**, **Express**, **MongoDB**, and **EJS** templating engine.
 
 ---
 
-## 📌 Features Implemented
+## 📌 Features
 
-✅ **User Registration (Signup)** with email & password validation
-✅ **User Login** with JWT-based authentication
-✅ **Password Hashing** using bcrypt for security
-✅ **JWT Token Generation** for authentication
-✅ **Cookies for Storing JWT** (HTTP-only)
-✅ **Error Handling** for validation failures
-✅ **Logout Functionality** by clearing cookies
+### 🔐 Authentication
+- JWT-based login system
+- Three user roles: **User**, **Recruiter**, and **Admin**
+- Role-based access to features and pages
+
+### 📝 Job Posting (Recruiters Only)
+- Recruiters can:
+  - Create jobs with Title, Description, Skills, Location, Salary
+  - Edit or Close jobs
+  - View list of jobs they’ve posted
+
+### 🌍 Job Listing (All Users)
+- All jobs are listed publicly with:
+  - Title, Description, Skills, Location, Salary
+  - “Apply” button (disabled if already applied)
+  - “View Applicants” (for recruiters/admins only)
+
+### 📤 Job Application (Users Only)
+- Logged-in users can apply to jobs with:
+  - Resume Upload (PDF)
+  - Full Name, Email, Phone
+  - Cover Letter
+  - LinkedIn, GitHub, Portfolio
+  - Experience (years)
+- Prevents multiple applications to the same job
+
+### 📂 Resume Management
+- Resumes stored as **PDF buffer in MongoDB**
+- Resumes viewable via inline PDF viewer (iframe)
+
+### 🧑‍🤝‍🧑 View Applicants (Recruiters/Admins)
+- View all applicants for a job with:
+  - Name, Email, Experience, Cover Letter
+  - Resume Preview
+  - Optional LinkedIn, GitHub, Portfolio links
+
+### 📎 Slug-based Job URLs
+- Clean job URLs using slugs (e.g., `/jobs/apply/frontend-developer`)
 
 ---
-### **💡 Next Steps**
-- Implement **protected routes** (middleware) to allow access only to logged-in users.
-- Use **React or another frontend framework** to handle authentication UI.
-- Add **password reset functionality**.
+
+## 🛠️ Tech Stack
+
+| Frontend    | Backend     | Database | Authentication |
+|-------------|-------------|----------|----------------|
+| HTML + CSS + EJS | Node.js + Express | MongoDB (Mongoose) | JWT |
+
+---
+
+
