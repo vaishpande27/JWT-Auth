@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Apply for <%= job.title %></title>
+  <link rel="stylesheet" href="/css/applicationform.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Apply for <%= job.title %></h1>
+
+    <form action="/jobs/apply/<%= job._id %>" method="POST" enctype="multipart/form-data" class="application-form">
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="phone">Phone Number *</label>
+      <input type="tel" id="phone" name="phone" required>
+
+      <label for="resume">Upload Resume (PDF) *</label>
+      <input type="file" id="resume" name="resume" accept=".pdf" required>
+
+      <label for="coverLetter">Cover Letter *</label>
+      <textarea id="coverLetter" name="coverLetter" rows="5" placeholder="Tell us why you're a good fit..." required></textarea>
+
+      <label for="portfolio">LinkedIn</label>
+      <input type="url" id="linkedin" name="linkedin">
+
+      <label for="portfolio"> Portfolio</label>
+      <input type="url" id="portfolio" name="portfolio">
+
+      <label for="portfolio">GitHub</label>
+      <input type="url" id="github" name="github">
+
+      <label for="experience">Years of Experience *</label>
+      <input type="number" id="experience" name="experience" min="0" required>
+
+      <button type="submit">Submit Application</button>
+    </form>
+  </div>
+</body>
+</html>

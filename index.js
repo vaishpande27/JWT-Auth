@@ -1,16 +1,20 @@
 const express=require('express')
+const path = require('path');
 const authRoutes=require('./Routes/authRoutes')
 const connectDB=require('./config/db')
 const cookieParser=require('cookie-parser')
-const requireAuth=require('./middlewares/authmiddleware')
+const {requireAuth,checkUser}=require('./middlewares/authmiddleware')
 const userRoutes=require('./Routes/userRoutes')
+const jobRoutes=require('./Routes/jobRoutes')
 
 const app=express();
-app.use(express.static('public'))
+// Serve static files (CSS, images, etc.)
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cookieParser());
 
 app.set('view engine','ejs')
+app.set('views', path.join(__dirname, 'views'));
 
 connectDB(); //database connection
 
@@ -18,8 +22,10 @@ connectDB(); //database connection
 app.use(express.json());  // ✅ Allows JSON request bodies
 app.use(express.urlencoded({ extended: true }));  // ✅ Allows form data
 
+app.get('*',checkUser)   //* means apply this to every single route
 app.use("/",authRoutes)
 app.use("/",userRoutes)
+app.use("/jobs",jobRoutes)
 
 // the main-page is accessible only to the logged in users
 // app.get('/main-page',requireAuth,(req,res)=>{

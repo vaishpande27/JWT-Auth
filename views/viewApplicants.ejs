@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Applicants for <%= job.title %></title>
+  <link rel="stylesheet" href="/css/viewApplicants.css">
+</head>
+<body>
+  <h1>Applicants for: <%= job.title %></h1>
+
+  <% if (applications.length === 0) { %>
+    <p>No one has applied for this job yet.</p>
+  <% } else { %>
+    <% applications.forEach(app => { %>
+      <div class="applicant-card">
+        <h3><%= app.name %></h3>
+        <p><strong>Email:</strong> <%= app.email %></p>
+        <p><strong>Experience:</strong> <%= app.experience %> years</p>
+        <p><strong>Cover Letter:</strong> <%= app.coverLetter %></p>
+
+        <% if (app.linkedin) { %>
+          <p><strong>LinkedIn:</strong> <a href="<%= app.linkedin %>" target="_blank">View</a></p>
+        <% } %>
+
+        <% if (app.portfolio) { %>
+          <p><strong>Portfolio:</strong> <a href="<%= app.portfolio %>" target="_blank">View</a></p>
+        <% } %>
+
+        <% if (app.github) { %>
+          <p><strong>GitHub:</strong> <a href="<%= app.github %>" target="_blank">View</a></p>
+        <% } %>
+
+        <% if (app.resume && app.resume.data) { %>
+          <p><strong>Resume:</strong> <%= app.resume.filename %></p>
+          <a href="/jobs/view-resume/<%= app.slug %>" target="_blank">
+            <button>📄 View Resume</button>
+          </a>
+        <% } else { %>
+          <p><strong>Resume:</strong> Not uploaded</p>
+        <% } %>
+
+        <hr>
+      </div>
+    <% }) %>
+  <% } %>
+
+  <a href="/jobs">← Back to Job List</a>
+</body>
+</html>

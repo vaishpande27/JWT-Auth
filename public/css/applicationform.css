@@ -1,0 +1,43 @@
+.container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
+  .application-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .application-form label {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  
+  .application-form input,
+  .application-form textarea {
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .application-form button {
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .application-form button:hover {
+    background-color: #0056b3;
+  }
+  

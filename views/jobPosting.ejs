@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Posting</title>
+</head>
+<body>
+    <%- include('partials/header', { page: 'signup' }) %>
+
+    <h1>Admin Panel - Job Posting</h1>
+
+    <h2>Create a Job</h2>
+    <form id="jobForm">
+        <input type="text" id="title" placeholder="Job Title" required>
+        <textarea id="description" placeholder="Job Description" required></textarea>
+        <input type="text" id="skills" placeholder="Skills (comma separated)" required>
+        <input type="text" id="salary" placeholder="Salary" required>
+        <input type="text" id="location" placeholder="Location" required>
+        <button type="submit">Post Job</button>
+    </form>
+
+    <script>
+        // Ensure script runs after page loads
+        document.addEventListener("DOMContentLoaded", function () {
+            const jobForm = document.getElementById("jobForm");
+
+            if (!jobForm) {
+                console.error("Job form not found!");
+                return;
+            }
+
+            jobForm.addEventListener("submit", async function(event) {
+                event.preventDefault();
+        
+                const title = document.getElementById("title").value;
+                const description = document.getElementById("description").value;
+                const skills = document.getElementById("skills").value.split(",");
+                const salary = document.getElementById("salary").value;
+                const location = document.getElementById("location").value;
+        
+                try {
+                    const response = await fetch("/jobs/create", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include", // Send cookies
+                        body: JSON.stringify({ title, description, skills, salary, location })
+                    });
+        
+                    const data = await response.json();
+                    console.log("Parsed JSON Response:", data);
+        
+                    if (response.ok) {
+                        alert("Job posted successfully!");
+                        jobForm.reset(); // Clear form after successful submission
+                    } else {
+                        alert(`Error: ${data.message}`);
+                    }
+                } catch (error) {
+                    console.error("Error posting job:", error);
+                    alert("Something went wrong.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
