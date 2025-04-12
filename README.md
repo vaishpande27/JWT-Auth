@@ -52,7 +52,3 @@ A full-stack Job Portal where recruiters can post jobs, users can apply with res
 | Frontend    | Backend     | Database | Authentication |
 |-------------|-------------|----------|----------------|
 | HTML + CSS + EJS | Node.js + Express | MongoDB (Mongoose) | JWT |
-
----
-
-
