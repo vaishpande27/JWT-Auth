@@ -6,6 +6,7 @@ const cookieParser=require('cookie-parser')
 const {requireAuth,checkUser}=require('./middlewares/authmiddleware')
 const userRoutes=require('./Routes/userRoutes')
 const jobRoutes=require('./Routes/jobRoutes')
+const userDashboard = require('./Routes/applicantRoutes')
 
 const app=express();
 // Serve static files (CSS, images, etc.)
@@ -26,6 +27,7 @@ app.get('*',checkUser)   //* means apply this to every single route
 app.use("/",authRoutes)
 app.use("/",userRoutes)
 app.use("/jobs",jobRoutes)
+app.use('/user',userDashboard)
 
 // the main-page is accessible only to the logged in users
 // app.get('/main-page',requireAuth,(req,res)=>{

@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+}
+.sidebar {
+    width: 260px;
+    background-color: #555;
+    color: white;
+    height: calc(100vh - 80px);
+    padding: 20px;
+    float: left;
+}
+
+.profile-image {
+    width: 128px;
+    height: 128px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+}
+
+.sidebar-nav {
+    margin-top: 40px;
+}
+
+.nav-item {
+    padding: 10px 0;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    display: block;
+    font-size: 18px;
+}
+
+.nav-item:hover {
+    text-decoration: underline;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+}
+
+.about-section {
+    background-color: #e0e0e0;
+    padding: 20px;
+    position: relative;
+}
+
+.edit-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 5px 15px;
+    background-color: transparent;
+    border: 1px solid #333;
+    cursor: pointer;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    row-gap: 15px;
+    margin-top: 15px;
+}
+
+.info-label {
+    font-weight: bold;
+}
+
+.recent-apps {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+}
+
+.app-list {
+    margin-top: 20px;
+}
+
+.app-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
+}

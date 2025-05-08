@@ -1,69 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
     <%- include('partials/header', { page: 'login' }) %>
+        <div class="main-container">
+            <div class="container">
+                <div class="main-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>LogIn To Your Account</h2>
+                            <p>Join our community today</p>
+                        </div>
+                        <div class="card-body">
+                            <form id="loginForm">
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                                    <div class="email error"></div>
+                                </div>
 
-    <form>
-        <h2>Login page</h2>
-        <label for="email">Email</label>
-        <input type="text " name="email" required>
-        <div class="email error"></div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <div class="input-group">
+                                        <input type="password" id="password" name="password"
+                                            placeholder="Enter your password" required>
+                                        <span class="input-icon toggle-password">
+                                            <i class="fas fa-eye"></i>
+                                        </span>
+                                    </div>
+                                    <div class="password error"></div>
+                                </div>
 
-        <label for="password">Password</label>
-        <input type="password" name="password" required>
-        <div class="password error"></div>
+                                <button type="submit" class="btn">
+                                    <span class="loading-spinner">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </span>
+                                    Log In
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            Don't have an account? <a href="/signup">Sign Up here</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-panel">
+                    <div class="pattern-overlay"></div>
+                    <div class="side-sontent">
+                        <div class="signup-info-panel">
+                            <h1>Welcome Back to <span class="talent">Talent</span><span class="sync">Sync</span>
+                            </h1>
+                            <p>Sign in to keep growing with Talentsync</p>
+                            
+                            <div class="illustration">
+                                <img src="/images/login-img.png" alt="Illustration" />
+                            </div>
+                            <p class="quote">	"Open the door to new opportunities
+                                Log in and discover roles tailored just for you."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <button>Login</button>
-    </form>
+        <script>
+            const form = document.querySelector('form')
+            const emailError = document.querySelector('.email.error')
+            const passwordError = document.querySelector('.password.error')
 
-    <script>
-        const form=document.querySelector('form')
-        const emailError=document.querySelector('.email.error')
-        const passwordError=document.querySelector('.password.error')
+            const togglePassword = document.querySelector('.toggle-password');
+            const passwordInput = document.getElementById('password');
 
-        form.addEventListener('submit',async(e)=>{
-            e.preventDefault();
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function () {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
 
-            //reset errro msgs
-            emailError.textContent=''
-            passwordError.textContent=''
+                // Toggle icon
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
 
-            const email = form.email.value;
-            const password = form.password.value;
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            try{
-                const res=await fetch('/login',{
-                    method:'POST',
-                    body:JSON.stringify({email,password}),
-                    headers:{'Content-Type':'application/json'}
-                })
-                const data=await res.json();
-            
-                console.log("Parsed JSON Response:", data); // Debugging
+                //reset errro msgs
+                emailError.textContent = ''
+                passwordError.textContent = ''
 
-                if (data.errors) {
-                    if (data.errors.email) {
-                        emailError.textContent = data.errors.email;
+                const email = form.email.value;
+                const password = form.password.value;
+
+                try {
+                    const res = await fetch('/login', {
+                        method: 'POST',
+                        body: JSON.stringify({ email, password }),
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                    const data = await res.json();
+
+                    console.log("Parsed JSON Response:", data); // Debugging
+
+                    if (data.errors) {
+                        if (data.errors.email) {
+                            emailError.textContent = data.errors.email;
+                        }
+                        if (data.errors.password) {
+                            passwordError.textContent = data.errors.password;
+                        }
                     }
-                    if (data.errors.password) {
-                        passwordError.textContent = data.errors.password;
-                    }
-                }
 
-                if (data.user) {
-                    location.assign('/'); // Redirect on successful signup
+                    if (data.user) {
+                        if (data.user.role === 'admin') {
+                            location.assign('/admin');
+                        } else {
+                            location.assign('/user/Dashboard');
+                        }
+                    }
+
                 }
-            }
-            catch(err){
-                console.log(err)
-            }
-        })
-    </script>
+                catch (err) {
+                    console.log(err)
+                }
+            })
+
+        </script>
 </body>
+
 </html>

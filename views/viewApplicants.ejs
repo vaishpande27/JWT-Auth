@@ -3,47 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <title>Applicants for <%= job.title %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/viewApplicants.css">
 </head>
 <body>
-  <h1>Applicants for: <%= job.title %></h1>
-
-  <% if (applications.length === 0) { %>
-    <p>No one has applied for this job yet.</p>
-  <% } else { %>
-    <% applications.forEach(app => { %>
-      <div class="applicant-card">
-        <h3><%= app.name %></h3>
-        <p><strong>Email:</strong> <%= app.email %></p>
-        <p><strong>Experience:</strong> <%= app.experience %> years</p>
-        <p><strong>Cover Letter:</strong> <%= app.coverLetter %></p>
-
-        <% if (app.linkedin) { %>
-          <p><strong>LinkedIn:</strong> <a href="<%= app.linkedin %>" target="_blank">View</a></p>
-        <% } %>
-
-        <% if (app.portfolio) { %>
-          <p><strong>Portfolio:</strong> <a href="<%= app.portfolio %>" target="_blank">View</a></p>
-        <% } %>
-
-        <% if (app.github) { %>
-          <p><strong>GitHub:</strong> <a href="<%= app.github %>" target="_blank">View</a></p>
-        <% } %>
-
-        <% if (app.resume && app.resume.data) { %>
-          <p><strong>Resume:</strong> <%= app.resume.filename %></p>
-          <a href="/jobs/view-resume/<%= app.slug %>" target="_blank">
-            <button>📄 View Resume</button>
-          </a>
-        <% } else { %>
-          <p><strong>Resume:</strong> Not uploaded</p>
-        <% } %>
-
-        <hr>
+  <%- include('partials/header', { page: '' }) %>
+  <div class="main-container">
+    <%- include('partials/Sidebar.ejs') %>
+    
+    <div class="applicants-container">
+      <!-- Hero Section -->
+      <div class="applicants-hero">
+        <h1 class="hero-title">Talent Pool</h1>
+        <p class="hero-subtitle">Review candidates for <%= job.title %> position and find your next team member.</p>
+        
+        <div class="job-stats">
+          <div class="stat-item">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div>
+              <div class="stat-value"><%= applications.length %></div>
+              <div>Applicants</div>
+            </div>
+          </div>
+          
+          <div class="stat-item">
+            <div class="stat-icon"><i class="fas fa-briefcase"></i></div>
+            <div>
+              <div class="stat-value"><%= job.title %></div>
+              <div>Position</div>
+            </div>
+          </div>
+          
+          <div class="stat-item">
+            <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <div class="stat-value"><%= job.location || 'Remote' %></div>
+              <div>Location</div>
+            </div>
+          </div>
+        </div>
       </div>
-    <% }) %>
-  <% } %>
 
-  <a href="/jobs">← Back to Job List</a>
+      <% if (applications.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-illustration">
+            <i class="far fa-user-circle"></i>
+          </div>
+          <p>No candidates have applied for this position yet. Check back later or modify job requirements to attract more applicants.</p>
+          <a href="/jobs" class="back-link">
+            <i class="fas fa-arrow-left"></i> Return to Job Listings
+          </a>
+        </div>
+      <% } else { %>
+        <div class="applicants-grid">
+          <% applications.forEach((app, index) => { %>
+            <div class="applicant-card">
+              <div class="card-inner">
+              <div class="card-header">
+                <% if (app.status === 'shortlisted' || app.status === 'rejected') { %>
+                  <div class="status-tag <%= app.status %>"><%= app.status.charAt(0).toUpperCase() + app.status.slice(1) %></div>
+                <% } %>
+                <!-- <span class="experience-badge"><i class="fas fa-briefcase"></i> <%= app.experience %> Years</span> -->
+                <div class="applicant-name">
+                  <div class="applicant-avatar"><%= app.name.charAt(0).toUpperCase() %></div>
+                  <%= app.name %>
+                </div>
+              </div>
+              
+              <div class="card-body">
+                <div class="email-group">
+                  <span class="email-label"><i class="fas fa-envelope"></i> Email:</span>
+                  <a href="mailto:<%= app.email %>" class="email-value"><%= app.email %></a>
+                </div>
+                
+                <div class="detail-group">
+                  <span class="detail-label"><i class="fas fa-comment-alt"></i> Cover Letter</span>
+                  <div class="cover-letter"><%= app.coverLetter %></div>
+                </div>
+                
+                <!-- Optional: If you track skills in your application -->
+                <% if (app.skills && app.skills.length > 0) { %>
+                <div class="detail-group">
+                  <span class="detail-label"><i class="fas fa-tools"></i> Skills</span>
+                  <div class="skills-tags">
+                    <% app.skills.forEach(skill => { %>
+                      <span class="skill-tag"><%= skill %></span>
+                    <% }) %>
+                  </div>
+                </div>
+                <% } %>
+                
+                <!-- Social Links -->
+                <div class="links-section">
+                  <% if (app.linkedin) { %>
+                    <a href="<%= app.linkedin %>" target="_blank" class="social-link linkedin" title="LinkedIn Profile">
+                      <i class="fab fa-linkedin-in"></i>
+                      <span>LinkedIn</span>
+                    </a>
+                  <% } %>
+            
+                  <% if (app.github) { %>
+                    <a href="<%= app.github %>" target="_blank" class="social-link github" title="GitHub Profile">
+                      <i class="fab fa-github"></i>
+                      <span>GitHub</span>
+                    </a>
+                  <% } %>
+            
+                  <% if (app.portfolio) { %>
+                    <a href="<%= app.portfolio %>" target="_blank" class="social-link portfolio" title="Portfolio">
+                      <i class="fas fa-globe"></i>
+                      <span>Portfolio</span>
+                    </a>
+                  <% } %>
+                </div>
+              </div>
+              
+              <div class="card-footer">
+                <% if (app.resume && app.resume.data) { %>
+                  <a href="/jobs/view-resume/<%= app.slug %>" target="_blank" class="view-resume-btn">
+                    <i class="fas fa-file-pdf"></i> View Resume
+                  </a>
+                <% } else { %>
+                  <div class="detail-group" style="margin-bottom: 0;">
+                    <span class="detail-label"><i class="fas fa-exclamation-circle"></i> Resume</span>
+                    <span class="detail-value">No resume uploaded</span>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+            </div>
+          <% }) %>
+        </div>
+        
+        <div class="actions-section">
+          <a href="/jobs" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Job List
+          </a>
+          
+          <a href="/jobs/<%= job.slug %>/evaluate" class="evaluate-btn">
+            <i class="fas fa-brain"></i> Evaluate All Candidates
+          </a>
+        </div>
+      <% } %>
+    </div>
+  </div>
 </body>
 </html>

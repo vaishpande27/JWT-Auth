@@ -1,5 +1,5 @@
-const User=require('../model/User')
-const jwt=require('jsonwebtoken')
+const User = require('../model/User')
+const jwt = require('jsonwebtoken')
 
 const handleErrors = (err) => {
     let errors = { email: '', password: '' };
@@ -34,60 +34,66 @@ const handleErrors = (err) => {
 
 
 
-const maxAge=3*24*60*60 //expects time in seconds
+const maxAge = 3 * 24 * 60 * 60 //expects time in seconds
 //this function returns token with signature
-const createToken=(id,role)=>{
-    const token= jwt.sign({id, role},'Secret_message',{
-        expiresIn:maxAge
+const createToken = (id, role) => {
+    const token = jwt.sign({ id, role }, 'Secret_message', {
+        expiresIn: maxAge
     });
-    // console.log("Generated Token:",token) //Debugging
     return token;
 }
 
-module.exports.signup_get=(req,res)=>{
+module.exports.signup_get = (req, res) => {
     res.render('signUp')    // This will render signUp.ejs
 }
-module.exports.signup_post=async(req,res)=>{
+module.exports.signup_post = async (req, res) => {
     const { email, password, role } = req.body;
     // res.json({ message: "User signed up successfully", email, password });
     //we have to create a user using the post data
-    try{
-        const user=await User.create({email,password,role})
+    try {
+        const existing = await User.findOne({ email });
+        if (existing) {
+            return res.status(400).json({
+                errors: { email: 'That e‑mail is already registered!' }
+            });
+        }
+        const user = await User.create({ email, password, role })
         //right after we created a user we have to create a jwt
-        const token=createToken(user._id,user.role);
-        res.cookie('jwt',token,{httpOnly:true,maxAge:maxAge*1000})
-        res.status(201).json({user})
+        const token = createToken(user._id, user.role);
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 })
+        res.status(201).json({ user })
     }
-    catch(err){
-        const errors=handleErrors(err)
-        console.log("signUp erros",errors)
-        res.status(400).json({errors});  // Send error messages to the frontend
+    catch (err) {
+        const errors = handleErrors(err)
+        console.log("signUp erros", errors)
+        res.status(400).json({ errors });  // Send error messages to the frontend
         // console.log(err)
     }
 }
 
 
-module.exports.login_get=(req,res)=>{
+module.exports.login_get = (req, res) => {
     res.render('login')
 }
-module.exports.login_post=async(req,res)=>{
+module.exports.login_post = async (req, res) => {
     const { email, password } = req.body;
-    
+
     try {
         const user = await User.login(email, password);
         //if this is success we need to then create json web token to put in cookie and send to 
         // browser to say hey yes they are logged in and as long as they have this jwt they are logged in
-        const token=createToken(user._id,user.role);
-        res.cookie('jwt',token,{httpOnly:true,maxAge:maxAge*1000});
-        res.status(200).json({ user });
+        const token = createToken(user._id, user.role);
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+
+        res.status(200).json({ user: { id: user._id, role: user.role } });
     } catch (err) {
-        const errors=handleErrors(err)
+        const errors = handleErrors(err)
         res.status(400).json({ errors });  // Send a meaningful error message
     }
 }
 // Create a logout route that clears the JWT cookie.
 module.exports.logout_get = (req, res) => {
     res.cookie('jwt', '', { maxAge: 1 }); // Clear the cookie by setting an empty value and a very short expiry time
-    res.redirect('/login')
+    // res.redirect('/login')
     res.status(200).json({ message: 'User logged out successfully' });
 };

@@ -18,8 +18,14 @@ const jobApplicationSchema = new mongoose.Schema({
   github: { type: String },
   atsScore: { type: Number, default: 0 },
   slug: { type: String, unique: true },
-  appliedAt: { type: Date, default: Date.now }
-});
+  appliedAt: { type: Date, default: Date.now },
+  status: {
+    type: String,
+    enum: ['applied', 'shortlisted', 'rejected'],
+    default: 'applied'
+  },
+  shortlisted: { type: Boolean, default: false }
+},{ timestamps: true });
 
 jobApplicationSchema.pre('save', function (next) {
   const baseSlug = `${this.name}-${Date.now()}`;

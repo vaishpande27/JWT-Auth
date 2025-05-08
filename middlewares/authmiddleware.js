@@ -7,15 +7,20 @@ const requireAuth=(req,res,next)=>{
     //check if we have the token and is verified
     if(token){
         //verify the token
-        jwt.verify(token,'Secret_message',(err,decodedToken)=>{
+        jwt.verify(token,'Secret_message',async(err,decodedToken)=>{
             if(err){
                 res.redirect('/login')
             }
-            else{
-                console.log(decodedToken)
-                //now u can carry on what u are doing
-                req.user = decodedToken;
-                next();
+            else {
+                try {
+                    const user = await User.findById(decodedToken.id).select('-password'); // fetch user details
+                    if (!user) return res.redirect('/login');
+                    req.user = user; // 👈 now req.user.email will work
+                    next();
+                } catch (error) {
+                    console.error("Auth Middleware DB Error:", error);
+                    res.redirect('/login');
+                }
             }
         })
     }
@@ -40,7 +45,7 @@ const checkUser=(req,res,next) =>{
                 let user=await User.findById(decodedToken.id);
                 //inside the views if we have the valid user and we found that user in the database then what we are doing 
                 // is passing that user into the view so we can access the properties on it like email and we could that maybe in the header(navbar)
-                res.locals.user = user; 
+                res.locals.user = user; // Makes `user` accessible in EJS
                 next();
             }
         })

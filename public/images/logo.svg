@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 130">
+  <!-- Background shape with softer corners and gradient -->
+  <rect x="15" y="25" width="450" height="100" rx="20" fill="url(#backgroundGradient)" />
+  
+  <!-- Abstract connectivity dots with glow effect -->
+  <circle cx="70" cy="75" r="9" fill="#3498db" filter="url(#glow)" />
+  <circle cx="100" cy="75" r="9" fill="#3498db" filter="url(#glow)" />
+  <circle cx="130" cy="75" r="9" fill="#3498db" filter="url(#glow)" />
+  
+  <!-- Connection lines with improved visibility -->
+  <line x1="70" y1="75" x2="100" y2="75" stroke="#3498db" stroke-width="3" />
+  <line x1="100" y1="75" x2="130" y2="75" stroke="#3498db" stroke-width="3" />
+
+  <!-- Sync arrows in a circle with better positioning -->
+  <circle cx="130" cy="75" r="18" stroke="#2c3e50" stroke-width="2" fill="none" />
+  <path d="M130 65 L136 71 L130 77" stroke="#2c3e50" stroke-width="2" fill="none" />
+  <path d="M130 85 L124 79 L130 73" stroke="#2c3e50" stroke-width="2" fill="none" />
+  
+  <!-- Text: TalentSync with better spacing and shadow -->
+  <text x="175" y="87" font-family="Arial, sans-serif" font-weight="bold" font-size="38" fill="#2c3e50" filter="url(#textShadow)">Talent</text>
+  <text x="290" y="87" font-family="Arial, sans-serif" font-weight="bold" font-size="38" fill="#3498db" filter="url(#textShadow)">Sync</text>
+  
+  <!-- Tagline with improved readability -->
+  <text x="180" y="110" font-family="Arial, sans-serif" font-size="15" fill="#555555" letter-spacing="0.5">Connecting Talent. Powering Success.</text>
+  
+  <!-- Definitions for filters and gradients -->
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0f6ff" />
+      <stop offset="100%" style="stop-color:#e4eeff" />
+    </linearGradient>
+    
+    <!-- Subtle glow for the dots -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <!-- Subtle shadow for text -->
+    <filter id="textShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-opacity="0.2" />
+    </filter>
+  </defs>
+</svg>

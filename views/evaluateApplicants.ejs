@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Evaluate Applicants for <%= job.title %>
+  </title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/evaluateApplication.css">
+</head>
+
+<body>
+  <div class="evaluation-container">
+    <div class="evaluation-header">
+      <h1>Candidate Evaluation</h1>
+      <p class="job-title">
+        <%= job.title %>
+      </p>
+      <div class="stats-bar">
+        <div class="stat-item">
+          <i class="fas fa-users"></i>
+          <div class="stat-details">
+            <span class="stat-value">
+              <%= applications.length %>
+            </span>
+            <span class="stat-label">Applicants</span>
+          </div>
+        </div>
+        <% if (job.location) { %>
+          <div class="stat-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div class="stat-details">
+              <span class="stat-value">
+                <%= job.location || 'Remote' %>
+              </span>
+              <span class="stat-label">Location</span>
+            </div>
+          </div>
+          <% } %>
+      </div>
+    </div>
+
+    <% if (applications.length===0) { %>
+      <div class="empty-state">
+        <i class="fas fa-user-slash"></i>
+        <p>No applicants have applied for this job yet.</p>
+        <a href="/jobs" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Job List</a>
+      </div>
+      <% } else { %>
+        <div class="applicant-list">
+          <div class="sorting-bar">
+            <div class="search-filter">
+              <input type="text" id="candidateSearch" placeholder="Search candidates...">
+              <i class="fas fa-search"></i>
+            </div>
+            <div class="sort-controls">
+              <label for="sortBy">Sort by:</label>
+              <select id="sortBy">
+                <option value="score">Final Score</option>
+                <option value="name">Name</option>
+                <option value="experience">Experience</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="candidates-grid">
+            <% applications.forEach((app, index)=> { %>
+              <div class="candidate-card" data-score="<%= app.finalScore %>" data-name="<%= app.name %>"
+                data-experience="<%= app.experience %>">
+                <div class="card-header">
+                  <div class="candidate-avatar">
+                    <%= app.name.charAt(0).toUpperCase() %>
+                  </div>
+                  <div class="candidate-info">
+                    <h3>
+                      <%= app.name %>
+                    </h3>
+                    <span class="experience-badge"><i class="fas fa-briefcase"></i>
+                      <%= app.experience %> years
+                    </span>
+                  </div>
+                  <div class="score-badge">
+                    <div class="score-circle" style="--score: <%= app.finalScore %>%">
+                      <span>
+                        <%= app.finalScore %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-body">
+                  <div class="info-section">
+                    <div class="info-row">
+                      <i class="fas fa-envelope"></i>
+                      <a href="mailto:<%= app.email %>">
+                        <%= app.email %>
+                      </a>
+                    </div>
+
+                    <div class="info-row profiles">
+                      <% if (app.linkedin) { %>
+                        <a href="<%= app.linkedin %>" target="_blank" class="profile-link linkedin">
+                          <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        <% } %>
+
+                          <% if (app.github) { %>
+                            <a href="<%= app.github %>" target="_blank" class="profile-link github">
+                              <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <% } %>
+
+                              <% if (app.portfolio) { %>
+                                <a href="<%= app.portfolio %>" target="_blank" class="profile-link portfolio">
+                                  <i class="fas fa-globe"></i> Portfolio
+                                </a>
+                                <% } %>
+                    </div>
+                  </div>
+
+                  <div class="expandable-section">
+                    <details>
+                      <summary>Cover Letter</summary>
+                      <div class="cover-letter-content">
+                        <%= app.coverLetter %>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+
+                <div class="card-footer">
+                  <% if (app.resume && app.resume.data) { %>
+                    <a href="/jobs/view-resume/<%= app.slug %>" target="_blank" class="resume-btn">
+                      <i class="fas fa-file-pdf"></i> View Resume
+                    </a>
+                    <% } else { %>
+                      <span class="no-resume"><i class="fas fa-exclamation-circle"></i> No resume uploaded</span>
+                      <% } %>
+                      <button class="evaluate-single-btn" data-id="<%= app.slug %>">
+                        <i class="fas fa-user-check"></i> shortlist
+                      </button>
+                      <button class="reject-btn" data-id="<%= app.slug %>">
+                        <i class="fas fa-user-times"></i> Reject
+                      </button>
+                      
+                </div>
+              </div>
+              <% }) %>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <a href="/jobs" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Job List</a>
+        </div>
+        <% } %>
+  </div>
+
+  <script>
+    // Simple search functionality
+    document.getElementById('candidateSearch').addEventListener('input', function () {
+      const searchTerm = this.value.toLowerCase();
+      document.querySelectorAll('.candidate-card').forEach(card => {
+        const candidateName = card.getAttribute('data-name').toLowerCase();
+        if (candidateName.includes(searchTerm)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Sorting functionality
+    document.getElementById('sortBy').addEventListener('change', function () {
+      const sortBy = this.value;
+      const cards = Array.from(document.querySelectorAll('.candidate-card'));
+
+      cards.sort((a, b) => {
+        if (sortBy === 'score') {
+          return parseInt(b.getAttribute('data-score')) - parseInt(a.getAttribute('data-score'));
+        } else if (sortBy === 'name') {
+          return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+        } else if (sortBy === 'experience') {
+          return parseInt(b.getAttribute('data-experience')) - parseInt(a.getAttribute('data-experience'));
+        }
+      });
+
+      const grid = document.querySelector('.candidates-grid');
+      cards.forEach(card => grid.appendChild(card));
+    });
+
+    //shortlisting logic
+    document.querySelectorAll('.evaluate-single-btn').forEach(button => {
+      button.addEventListener('click', async function (e) {
+        e.preventDefault();
+        const slug = this.getAttribute('data-id');
+        const card = this.closest('.candidate-card');
+
+        try {
+          const res = await fetch(`/jobs/shortlist/${slug}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          const data = await res.json();
+          if (data.success) {
+            card.remove(); // Remove candidate from current view
+          } else {
+            alert('Failed to shortlist candidate');
+          }
+        } catch (error) {
+          alert('Error shortlisting candidate');
+        }
+      });
+    });
+
+    // Reject logic
+  document.querySelectorAll('.reject-btn').forEach(button => {
+    button.addEventListener('click', async function (e) {
+      e.preventDefault();
+      const slug = this.getAttribute('data-id');
+      const card = this.closest('.candidate-card');
+
+      try {
+        const res = await fetch(`/jobs/reject/${slug}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          card.remove(); // Remove candidate from view
+        } else {
+          alert('Failed to reject candidate');
+        }
+      } catch (error) {
+        alert('Error rejecting candidate');
+      }
+    });
+  });
+
+  </script>
+</body>
+
+</html>

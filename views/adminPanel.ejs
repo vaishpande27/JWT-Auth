@@ -1,17 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuiters Dashboard</title>
-    <link rel="stylesheet" href="/css/adminPanel.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+  <link rel="stylesheet" href="/css/adminPanel.css">
 </head>
 <body>
-    <%- include('partials/header', { page: '' }) %>
+  <%- include('partials/header') %>
+  <div class="container">
+    <%- include('partials/Sidebar.ejs') %>
 
-    <h1>Recuiters Dashboard</h1>
-    <div class="container">
+    <main class="main-content">
+      <div class="breadcrumbs">
+        <span class="breadcrumb-item">Home</span>
+        <span class="breadcrumb-item">Dashboard</span>
+      </div>
+      
+      <h1 class="page-title">Dashboard Overview</h1>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon bg-primary">
+            <i class="fas fa-briefcase"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value"><%= stats.activeJobs %></div>
+            <div class="stat-label">Active Jobs</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon bg-success">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value"><%= stats.totalApplicants %></div>
+            <div class="stat-label">Total Applicants</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon bg-warning">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value"><%= stats.shortlisted %></div>
+            <div class="stat-label">Shortlisted</div>
+          </div>
+        </div>
+        
+        <!-- <div class="stat-card">
+          <div class="stat-icon bg-danger">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Interviews</div>
+          </div>
+        </div> -->
+      </div>
+      
+      <div class="card-grid">
+        <div class="card" id="post-job-card">
+          <div class="card-icon">
+            <i class="fas fa-plus-square fa-3x"></i>
+          </div>
+          <h2 class="card-title">Post Job</h2>
+          <p class="card-description">Create a new job listing with comprehensive details</p>
+        </div>
 
-    </div>
+        <div class="card" id="jobs-card">
+          <div class="card-icon">
+            <i class="fas fa-briefcase fa-3x"></i>
+          </div>
+          <h2 class="card-title">Jobs</h2>
+          <p class="card-description">Manage your active, closed and drafted job listings</p>
+        </div>
+
+        <div class="card" id="shortlisted-card">
+          <div class="card-icon">
+            <i class="fas fa-user-check fa-3x"></i>
+          </div>
+          <h2 class="card-title">Shortlisted Candidates</h2>
+          <p class="card-description">Review and manage candidates you've shortlisted</p>
+        </div>
+
+        <!-- <div class="card" id="applicants">
+          <div class="card-icon">
+            <i class="fas fa-users fa-3x"></i>
+          </div>
+          <h2 class="card-title">Applicants</h2>
+          <p class="card-description">Access all applications received for your job listings</p>
+        </div> -->
+      </div>
+      
+      
+    </main>
+  </div>
+  
+  <div class="floating-action">
+    <i class="fas fa-plus"></i>
+  </div>
+
+  <script src="js/adminPanel.js"></script>
 </body>
 </html>

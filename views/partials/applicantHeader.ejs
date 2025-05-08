@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .header {
+            background-color: #008B8B;
+            height: 90px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .welcome-text {
+            font-size: 1.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+
+        .logout-btn {
+            background: white;
+            color:  #265199 !important;
+            padding: 0.5rem 1rem;
+            border-radius: 8px !important;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background-color: #F8F9FA !important;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="/images/logo.svg" alt="TalentSync" style="height: 60px;" />
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="welcome-text">Welcome, <%= user.email %>
+            </div>
+            <form action="/logout" method="POST" style="display:inline;">
+                <button class="logout-btn">Log Out</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.logout-btn').addEventListener('click', async () => {
+          try {
+            const res = await fetch('/logout');
+            const data = await res.json();
+            if (res.ok) {
+              window.location.href = '/login'; // Redirect to login after successful logout
+            }
+          } catch (err) {
+            console.error("Logout failed:", err);
+          }
+        });
+      </script>
+</body>
+
+</html>

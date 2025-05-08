@@ -2,28 +2,70 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+  <link rel="stylesheet" href="/css/adminheader.css" />
 </head>
 
 <body>
-    <header>
-        <div class="logo">JWT Auth</div>
-        <nav>
-            <ul>
-                <% if(user){ %>
-                    <li>Welcome, <%= user.email %></li>
-                    <li><a href="/logout">Log Out</a></li>
-                <% } else { %>
-                    <li><a href="/login" class="<%= page === 'login' ? 'active' : '' %>">Log In</a></li>
-                    <li><a href="/signUp" class="<%= page === 'signup' ? 'active' : '' %>">Sign Up</a></li>
-                <% } %>
-            </ul>
-        </nav>
+
+  <% if (user) { %>
+    <!-- ✅ Header for Logged-In Users -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <i class="fas fa-cube"></i>
+          <span class="title">Admin Dashboard</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="notifications-icon">
+          <i class="fas fa-bell"></i>
+          <span class="notifications-badge">3</span>
+        </div>
+
+        <div class="welcome-text">Welcome, <%= user.email %>
+        </div>
+        <form action="/logout" method="POST" style="display:inline;">
+          <button class="logout-btn">Log Out</button>
+        </form>
+      </div>
     </header>
 
+    <% } else { %>
+      <header class="header">
+        <div class="header-left">
+          <div class="logo">
+            <img src="/images/logo.svg" alt="TalentSync" style="height: 60px;" />
+          </div>
+        </div>
+
+        <div class="header-right">
+          <nav>
+            <ul>
+              <li><a href="/login" class="<%= page === 'login' ? 'active' : '' %>">Log In</a></li>
+              <li><a href="/signUp" class="<%= page === 'signup' ? 'active' : '' %>">Sign Up</a></li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <% } %>
+        <script>
+          document.querySelector('.logout-btn').addEventListener('click', async () => {
+            try {
+              const res = await fetch('/logout');
+              const data = await res.json();
+              if (res.ok) {
+                window.location.href = '/login'; // Redirect to login after successful logout
+              }
+            } catch (err) {
+              console.error("Logout failed:", err);
+            }
+          });
+        </script>
 </body>
 
 </html>

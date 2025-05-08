@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentSync - Profile</title>
+    <link rel="stylesheet" href="/css/userDashboard.css">
+</head>
+
+<body>
+    <%- include('partials/applicantHeader') %>
+
+    <div class="sidebar">
+        <div class="profile-image">
+            <img src="../public/images/profile-img.png" alt="profile-image">
+        </div>
+        <div class="sidebar-nav">
+            <a href="/jobs" class="nav-item">Jobs</a>
+            <a href="#" class="nav-item">Application Status</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="about-section">
+            <h2>About</h2>
+            <button class="edit-button">
+                <a href="/user/setup-profile">Edit</a>
+            </button>
+
+            <div class="info-grid">
+                <div class="info-label">Full Name:</div>
+                <div class="info-value">
+                    <%= user.name %>
+                </div>
+
+                <div class="info-label">Email:</div>
+                <div class="info-value">
+                    <%= user.email %>
+                </div>
+
+                <div class="info-label">Phone:</div>
+                <div class="info-value">
+                    <%= user.phone %>
+                </div>
+
+                <div class="info-label">Resume:</div>
+                <div class="info-value">
+                    <a href="/user/view-resume"><button>View Resume</button></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-apps">
+            <h2>Recent Applications</h2>
+            <div class="app-list">
+                <div class="app-item"></div>
+                <div class="app-item"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

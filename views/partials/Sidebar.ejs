@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/Sidebar.css">
+</head>
+
+<body>
+  <button class="menu-toggle">
+    <i class="fas fa-bars"></i>
+    <span class="menu-text">Menu</span>
+  </button>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="user-info">
+        <div class="user-avatar">
+          <%= user.email.charAt(0).toUpperCase() %>
+        </div>
+        <div class="user-details">
+          <!-- <div class="user-name">Vaishnavi</div> -->
+          <div class="user-role">Administrator</div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item active">
+        <a href="/admin" class="nav-link">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/jobs" class="nav-link">
+          <i class="fas fa-briefcase"></i>
+          <span>Jobs</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <i class="fas fa-users"></i>
+          <span>Applicants</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="/jobs/shortlisted" class="nav-link">
+          <i class="fas fa-user-check"></i>
+          <span>Shortlisted Candidates</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <script>
+
+    // Toggle sidebar on mobile
+    const menuToggle = document.querySelector('.menu-toggle');
+    if (menuToggle) {
+      menuToggle.addEventListener('click', function () {
+        document.querySelector('.sidebar').classList.toggle('active');
+      });
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function (event) {
+      const sidebar = document.querySelector('.sidebar');
+      const menuToggle = document.querySelector('.menu-toggle');
+
+      if (window.innerWidth <= 768 &&
+        sidebar &&
+        menuToggle &&
+        !sidebar.contains(event.target) &&
+        !menuToggle.contains(event.target) &&
+        sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    });
+    // Add active class to current page in sidebar
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.nav-link').forEach(link => {
+      const href = link.getAttribute('href');
+
+      if (href && currentPath.includes(href) && href !== '#') {
+        link.closest('.nav-item').classList.add('active');
+      }
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/adminheader.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <img src="/images/logo.svg" alt="TalentSync">
+            </div>
+        </div>
+        <div class="header-right">
+            <nav>
+                <ul>
+                    <li><a href="/login" class="<%= page === 'login' ? 'active' : '' %>">Log In</a></li>
+                    <li><a href="/signUp" class="<%= page === 'signup' ? 'active' : '' %>">Sign Up</a></li>
+                    <!-- <li><a href="/logout">Log Out</a></li> -->
+                </ul>
+            </nav>
+        </div>
+        
+    </header>
+
+</body>
+
+</html>

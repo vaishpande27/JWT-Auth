@@ -3,65 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Posting</title>
+    <title>Post Job | Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/jobPosting.css">
 </head>
 <body>
-    <%- include('partials/header', { page: 'signup' }) %>
-
-    <h1>Admin Panel - Job Posting</h1>
-
-    <h2>Create a Job</h2>
-    <form id="jobForm">
-        <input type="text" id="title" placeholder="Job Title" required>
-        <textarea id="description" placeholder="Job Description" required></textarea>
-        <input type="text" id="skills" placeholder="Skills (comma separated)" required>
-        <input type="text" id="salary" placeholder="Salary" required>
-        <input type="text" id="location" placeholder="Location" required>
-        <button type="submit">Post Job</button>
-    </form>
-
-    <script>
-        // Ensure script runs after page loads
-        document.addEventListener("DOMContentLoaded", function () {
-            const jobForm = document.getElementById("jobForm");
-
-            if (!jobForm) {
-                console.error("Job form not found!");
-                return;
-            }
-
-            jobForm.addEventListener("submit", async function(event) {
-                event.preventDefault();
+    <%- include('partials/header') %>
+    <div class="main-container">
+        <%- include('partials/Sidebar.ejs') %>
         
-                const title = document.getElementById("title").value;
-                const description = document.getElementById("description").value;
-                const skills = document.getElementById("skills").value.split(",");
-                const salary = document.getElementById("salary").value;
-                const location = document.getElementById("location").value;
-        
-                try {
-                    const response = await fetch("/jobs/create", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include", // Send cookies
-                        body: JSON.stringify({ title, description, skills, salary, location })
-                    });
-        
-                    const data = await response.json();
-                    console.log("Parsed JSON Response:", data);
-        
-                    if (response.ok) {
-                        alert("Job posted successfully!");
-                        jobForm.reset(); // Clear form after successful submission
-                    } else {
-                        alert(`Error: ${data.message}`);
+        <main class="content">
+            <h1 class="page-title">Create a Job</h1>
+            
+            <div class="form-container">
+                <div id="successMessage" class="alert-success">Job posted successfully!</div>
+                
+                <form id="jobForm">
+                    <div class="form-group">
+                        <label for="title">Job Title</label>
+                        <input type="text" id="title" class="form-control" placeholder="Enter job title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Job Description</label>
+                        <textarea id="description" class="form-control" placeholder="Detail the responsibilities, requirements, and benefits" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="skills">Required Skills</label>
+                        <input type="text" id="skills" class="form-control" placeholder="e.g. JavaScript, React, Node.js" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="salary">Salary Range</label>
+                        <input type="text" id="salary" class="form-control" placeholder="e.g. $50,000 - $70,000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" class="form-control" placeholder="e.g. New York, NY or Remote" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Post Job</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const jobForm = document.getElementById("jobForm");
+                const successMessage = document.getElementById("successMessage");
+                
+                jobForm.addEventListener("submit", async function(event) {
+                    event.preventDefault();
+                    
+                    const title = document.getElementById("title").value;
+                    const description = document.getElementById("description").value;
+                    const skills = document.getElementById("skills").value.split(",").map(skill => skill.trim());
+                    const salary = document.getElementById("salary").value;
+                    const location = document.getElementById("location").value;
+                    
+                    const submitButton = jobForm.querySelector("button[type='submit']");
+                    const originalButtonText = submitButton.textContent;
+                    submitButton.textContent = "Posting...";
+                    submitButton.disabled = true;
+                    
+                    try {
+                        const response = await fetch("/jobs/post-job", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: "include",
+                            body: JSON.stringify({ title, description, skills, salary, location })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            successMessage.style.display = "block";
+                            jobForm.reset();
+                            
+                            setTimeout(() => {
+                                successMessage.style.display = "none";
+                            }, 3000);
+                        } else {
+                            alert(`Error: ${data.message}`);
+                        }
+                    } catch (error) {
+                        console.error("Error posting job:", error);
+                        alert("Something went wrong. Please try again later.");
+                    } finally {
+                        submitButton.textContent = originalButtonText;
+                        submitButton.disabled = false;
                     }
-                } catch (error) {
-                    console.error("Error posting job:", error);
-                    alert("Something went wrong.");
-                }
+                });
             });
-        });
-    </script>
+        </script>
 </body>
 </html>

@@ -2,79 +2,158 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignUP</title>
-    <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignUP</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
-    <%- include('partials/header', { page: 'signup' }) %>
+  <%- include('partials/header', { page: 'signup' }) %>
 
-        <form>
-            <h2>SignUp page</h2>
-            <label for="email">Email</label>
-            <input type="text " name="email" required>
-            <div class="email error"></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="main-content">
+          <div class="card">
+            <div class="card-header">
+              <h2>Create Your Account</h2>
+              <p>Join our community today</p>
+            </div>
 
-            <label for="password">Password</label>
-            <input type="password" name="password" required>
-            <div class="password error"></div>
+            <div class="card-body">
+              <form id="signupForm">
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                  <div class="email error"></div>
+                </div>
 
-            <label for="role">Select Role:</label>
-            <select id="role" name="role" required>
-                <option value="">-- Select Role --</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-            </select>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Choose a secure password"
+                      required>
+                    <span class="input-icon toggle-password">
+                      <i class="fas fa-eye"></i>
+                    </span>
+                  </div>
+                  <div class="password error"></div>
+                </div>
 
-            <button>SignUp</button>
-        </form>
+                <div class="form-group">
+                  <label for="role">Account Type</label>
+                  <select id="role" name="role" required>
+                    <option value="">-- Select Account Type --</option>
+                    <option value="admin">Administrator</option>
+                    <option value="user">Regular User</option>
+                  </select>
+                </div>
 
-        <script>
-            const form = document.querySelector('form');
-            const emailError = document.querySelector('.email.error');
-            const passwordError = document.querySelector('.password.error');
+                <button type="submit" class="btn">
+                  <span class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
+                  Create Account
+                </button>
+              </form>
+            </div>
 
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
+            <div class="card-footer">
+              Already have an account? <a href="/login">Log in here</a>
+            </div>
+          </div>
+        </div>
 
-                emailError.textContent = '';
-                passwordError.textContent = '';
+        <div class="side-panel">
+          <div class="pattern-overlay"></div>
+          <div class="side-content">
+            <div class="signup-info-panel">
 
-                const email = form.email.value;
-                const password = form.password.value;
-                const role = form.role.value;
+              <h1>Welcome to <span class="talent">Talent</span><span class="sync">Sync</span></h1>
+              <p>Your gateway to a smarter hiring journey.</p>
+              <ul>
+                <li><i class="fas fa-check-circle"></i> Connect with top talent worldwide</li>
+                <li><i class="fas fa-check-circle"></i> Streamline your recruitment process</li>
+                <li><i class="fas fa-check-circle"></i> Make data-driven hiring decisions</li>
+              </ul>
+              <div class="illustration">
+                <img src="/images/signup-img.png" alt="Login illustration">
+              </div>
+              <p class="quote">"Great teams start with great people. Transform your recruitment today."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-                try {
-                    const res = await fetch('/signUp', {
-                        method: 'POST',
-                        body: JSON.stringify({ email, password, role }),
-                        headers: { 'Content-Type': 'application/json' }
-                    });
+    <script>
+      const form = document.getElementById('signupForm');
+      const emailError = document.querySelector('.email.error');
+      const passwordError = document.querySelector('.password.error');
+      const togglePassword = document.querySelector('.toggle-password');
+      const passwordInput = document.getElementById('password');
 
-                    const data = await res.json();
-                    console.log("Parsed JSON Response:", data); // Debugging
+      // Toggle password visibility
+      togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
 
-                    if (data.errors) {
-                        if (data.errors.email) {
-                            emailError.textContent = data.errors.email;
-                        }
-                        if (data.errors.password) {
-                            passwordError.textContent = data.errors.password;
-                        }
-                    }
+        // Toggle icon
+        this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+      });
 
-                    if (data.user) {
-                        location.assign('/'); // Redirect on successful signup
-                    }
-                } catch (err) {
-                    console.log("Fetch Error:", err);
-                }
-            });
+      // Form submission
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-        </script>
+        // Clear previous errors
+        emailError.textContent = '';
+        passwordError.textContent = '';
 
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.classList.add('loading');
+
+        const email = form.email.value;
+        const password = form.password.value;
+        const role = form.role.value;
+
+        try {
+          const res = await fetch('/signUp', {
+            method: 'POST',
+            body: JSON.stringify({ email, password, role }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          const data = await res.json();
+
+          if (data.errors) {
+            if (data.errors.email) {
+              emailError.textContent = data.errors.email;
+            }
+            if (data.errors.password) {
+              passwordError.textContent = data.errors.password;
+            }
+          }
+
+          if (data.user) {
+            // Show success message before redirect
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
+            submitBtn.style.backgroundColor = 'var(--success)';
+
+            // Redirect after brief delay
+            setTimeout(() => {
+              location.assign('/');
+            }, 1000);
+          }
+        } catch (err) {
+          console.error("Fetch Error:", err);
+        } finally {
+          // Remove loading state
+          submitBtn.classList.remove('loading');
+        }
+      });
+    </script>
 </body>
 
 </html>

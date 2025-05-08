@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shortlisted Candidates</title>
+  <link rel="stylesheet" href="/css/shortlisted.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+
+    <div class="page-header">
+      <h1 class="page-title">Shortlisted Candidates</h1>
+      <p class="page-subtitle">Review and manage candidates who passed initial screening</p>
+    </div>
+
+    <form id="filterForm" method="GET" action="/jobs/shortlisted">
+      <div class="controls">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" name="search" placeholder="Search candidates..." value="<%= typeof search !== 'undefined' ? search : '' %>">
+        </div>
+        <div class="filter-buttons">
+          <select name="job" class="filter-dropdown">
+            <option value="">All Jobs</option>
+            <% jobTitles.forEach(function(title) { %>
+              <option value="<%= title %>" <%= jobFilter === title ? 'selected' : '' %>><%= title %></option>
+            <% }) %>
+          </select>
+    
+          <select name="score" class="filter-dropdown">
+            <option value="">All Scores</option>
+            <option value="80" <%= scoreFilter === '80' ? 'selected' : '' %>>80% & above</option>
+            <option value="60" <%= scoreFilter === '60' ? 'selected' : '' %>>60% - 79%</option>
+            <option value="0" <%= scoreFilter === '0' ? 'selected' : '' %>>< 60%</option>
+          </select>
+    
+          <button type="submit" class="btn btn-outline">
+            <i class="fas fa-filter"></i> Filter
+          </button>
+          <button type="submit" formaction="/shortlisted/export" class="btn btn-primary">
+            <i class="fas fa-download"></i> Export
+          </button>
+        </div>
+      </div>
+    </form>
+    
+
+    <% if (candidates.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-user-friends empty-state-icon"></i>
+        <h3 class="empty-state-title">No candidates shortlisted yet</h3>
+        <p class="empty-state-description">
+          When you shortlist candidates, they will appear here for easy access and review.
+        </p>
+        <button class="btn btn-primary">
+          <i class="fas fa-search"></i> Browse Applications
+        </button>
+      </div>
+    <% } else { %>
+      <div class="card-grid">
+        <% candidates.forEach(function(c) { %>
+          <div class="candidate-card">
+            <div class="candidate-header">
+                <div class="avatar"><%= c.user.name.charAt(0) %></div>
+                
+                                
+              <div class="candidate-info">
+                
+                <h3 class="candidate-name"><%= c.user.name %></h3>
+                <p class="candidate-email"><%= c.user.email %></p>
+                
+              </div>
+              <% if (c.atsScore >= 80) { %>
+                <span class="badge badge-high"><%= c.atsScore %>%</span>
+              <% } else if (c.atsScore >= 60) { %>
+                <span class="badge badge-medium"><%= c.atsScore %>%</span>
+              <% } else { %>
+                <span class="badge badge-low"><%= c.atsScore %>%</span>
+              <% } %>
+            </div>
+
+            <div class="candidate-body">
+                <h4 class="job-list-title">Shortlisted for:</h4>
+                <ul class="job-list">
+                  <% c.applications.forEach(function(app) { %>
+                    <li>
+                      <strong><%= app.jobTitle %></strong>
+                    </li>
+                  <% }) %>
+                </ul>
+                
+                <a href="/jobs/view-resume/<%= c.applications[0].resumeSlug %>" target="_blank" class="resume-link">
+                  <i class="far fa-file-pdf"></i> View Resume
+                </a>
+
+              <div class="candidate-actions">
+                <div>
+                  <button class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Send Email
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.candidate-card');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-4px)';
+        });
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const filterForm = document.getElementById('filterForm');
+    const selects = filterForm.querySelectorAll('select');
+    
+    selects.forEach(select => {
+      select.addEventListener('change', () => {
+        filterForm.submit();
+      });
+    });
+  });
+
+  
+  </script>
+  </body>
+  </html>
