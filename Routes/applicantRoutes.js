@@ -5,14 +5,11 @@ const { requireAuth } = require('../middlewares/authmiddleware');
 
 const router=express.Router();
 
-// GET form
-router.get('/setup-profile', requireAuth, applicantController.renderSetupForm);
-// POST form
-router.post('/setup-profile',requireAuth, upload.single('resume'), applicantController.saveProfile);
+// GET setup/edit profile form
+router.get('/setup-profile', requireAuth, applicantController.renderSetupOrEditForm);
 
-router.post('/update-profile', requireAuth, upload.single('resume'), applicantController.saveProfile);
-
-
+// Unified POST handler for both new setup and updates
+router.post('/submit-profile', requireAuth, upload.single('resume'), applicantController.handleProfileSubmit);
 // Dashboard
 router.get('/Dashboard', applicantController.userDashboard);
 
