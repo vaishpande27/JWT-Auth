@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/applicantSidebar.css">
+</head>
+<body>
+    <aside class="sidebar">
+                <div class="profile-section">
+                    <div class="profile-image" id="profileImageTrigger">
+     <% if (user.profileImage && user.profileImage.data) { %>
+        <img src="data:<%= user.profileImage.contentType %>;base64,<%= user.profileImage.data.toString('base64') %>" alt="Profile Image" />
+    <% } else { %>
+        <% const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase(); %>
+        <%= initials %>
+    <% } %>
+</div>
+
+<form id="profileImageForm" action="/user/upload-profile-image" method="POST" enctype="multipart/form-data" style="display: none;">
+    <input type="file" id="profileImageInput" name="profileImage" accept="image/*" onchange="document.getElementById('profileImageForm').submit();" />
+</form>
+
+                    <div>
+                        <h2 class="profile-name"><%= user.name %></h2>
+                        <p class="profile-status">Job Seeker</p>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <a href="/profile" class="nav-item active">
+                        <span class="nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </span>
+                        Profile
+                    </a>
+                    <a href="/jobs" class="nav-item">
+                        <span class="nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </span>
+                        Jobs
+                    </a>
+                    <a href="/applications" class="nav-item">
+                        <span class="nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </span>
+                        Applications
+                    </a>
+                    <a href="/saved" class="nav-item">
+                        <span class="nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </span>
+                        Saved
+                    </a>
+                </nav>
+            </aside>
+</body>
+</html>
